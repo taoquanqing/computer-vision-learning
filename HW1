@@ -1,0 +1,32 @@
+#encoding=utf-8
+import matplotlib.pylab as plt
+import numpy as np
+import tkinter as tk
+from PIL import Image
+from tkinter import filedialog
+import tkinter.messagebox
+
+def process_image(filename, mwidth=11, mheight=11):
+    image = Image.open(filename)
+    w,h = image.size
+    if w<=mwidth and h<=mheight:
+        tk.messagebox.showinfo('提示', '已标准化结构体图片')
+        
+    if (1.0*w/mwidth) > (1.0*h/mheight):
+        scale = 1.0*w/mwidth
+        image=image.resize((int(w/scale), int(h/scale)), Image.ANTIALIAS)
+ 
+    else:
+        scale = 1.0*h/mheight
+        image= image.resize((int(w/scale),int(h/scale)), Image.ANTIALIAS)
+    return image 
+
+raw_path = filedialog.askopenfilename()#获取原始图片文件路径
+
+stru_path=filedialog.askopenfilename()#获取结构体文件路径
+
+stru_pic=process_image(stru_path).convert('L')
+raw_pic= Image.open(raw_path).convert('L')
+
+raw_pic_Array=np.array(raw_pic)
+stru_pic_Array=np.array(stru_pic)
